@@ -1,6 +1,5 @@
-# Pipe Process 002#
+# Pipe Process 003#
 
-This process is based on starting to create the variables and writing the pipe message all in the parent process, right after creating the child process and reading into it. In my case the message was just an integer: 9.
 
 ## How to use ? :gear:
 <img src="./image/C-logo-editado.png" align="right" width="300">
