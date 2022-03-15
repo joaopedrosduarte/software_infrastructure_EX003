@@ -1,5 +1,6 @@
-# Pipe Process 003#
+# Thread Process 003#
 
+This process is based on definicion and creation of 3 threads by the comand pthreat_t[Number of threads] (Definition), and pthread_create(thread, ???, function, args) (Creation and designation), and after the creation, each thread is designated for one function, the function to calculate the avarege of the array, other for select the minor number of the array, and the last one, for select the biggest number of array, and to end the process its just use the comand pthread_join(thread, produced value of the function)
 
 ## How to use ? :gear:
 <img src="./image/C-logo-editado.png" align="right" width="300">
