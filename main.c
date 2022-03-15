@@ -1,26 +1,88 @@
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define NUM_THREADS 3
+
+int SOMA = 0;
+int MAX = 0;
+int MIN = 2147483647;
+int TAM;
+int INDEX = 0;
+
+void *Soma(void *number) {
+    int *newNumber = (int *)number;
+    int *backup = malloc(sizeof(int));
+    INDEX++;
+
+    SOMA += *newNumber;
+
+    if (INDEX == TAM){
+        *backup = SOMA / TAM;
+    }
+
+    return backup;
+}
+
+void *Max(void *number) {
+    int *newNumber = (int *)number;
+    int *backup = malloc(sizeof(int));
+
+    if (*newNumber > MAX) {
+        MAX = *newNumber;
+    }
+
+    *backup = MAX;
+
+    return backup;
+}
+
+void *Min(void *number) {
+    int *newNumber = (int *)number;
+    int *backup = malloc(sizeof(int));
+
+    if (*newNumber < MIN) {
+        MIN = *newNumber;
+    }
+
+    *backup = MIN;
+
+    return backup;
+}
 
 int main() {
-    pid_t pid;
-    int pipeFileDescriptor[2];
-    int menssageInt = 9;
-    int readMenssageInt;
-    int returnPipe = pipe(pipeFileDescriptor);
-    if (returnPipe == -1){
-        printf("Erro to create pipe");
-        return 1;
+    pthread_t threads[NUM_THREADS];
+    int *resMedia;
+    int *resMenor;
+    int *resMaior;
+
+    scanf("%d",&TAM);
+    
+    int array[TAM];
+
+    for (int i = 0;i<TAM;i++) {
+        scanf("%d",&array[i]);
     }
-    printf("Writing message Int on father process : \"%d\"\n", menssageInt);
-    write(pipeFileDescriptor[0], &menssageInt,sizeof(int)*1);
-    pid = fork();
-    if (pid == 0){
-        read(pipeFileDescriptor[1], &readMenssageInt,sizeof(int)*1);
-        printf("Write menssage Int on child process : \"%d\"\n", menssageInt);
-        return 1;
+    
+    for (int i = 0;i<TAM;i++) {
+        pthread_create(&(threads[0]), NULL, Soma,(void *)&(array[i]));
     }
+    pthread_join(threads[0], (void *)&resMedia);
+    printf("The average value is %d\n", *resMedia);
+    
+    for (int i = 0;i <TAM;i++){
+        pthread_create(&(threads[1]), NULL, Max, &(array[i]));
+    }
+    pthread_join(threads[1], (void *)&resMaior);
+    printf("The minimum value is %d\n", *resMaior);
+
+    for (int i = 0;i <TAM;i++){
+        pthread_create(&(threads[2]), NULL, Min, &(array[i]));
+    }
+    pthread_join(threads[2], (void *)&resMenor);
+    printf("The maximum value is %d\n", *resMenor);
+    
     return 0;
 }

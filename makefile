@@ -1,5 +1,5 @@
 bin: main.c
-	gcc $< -o $@
+	gcc -pthread -o $@ $<
 
 .PHONY: run clean
 
